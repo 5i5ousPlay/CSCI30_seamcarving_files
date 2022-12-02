@@ -43,8 +43,8 @@ class SeamCarver(Picture):
         G_y = abs(y_1[1] - y_2[1])
         B_y = abs(y_1[2] - y_2[2])
 
-        delta_x = pow(R_x, 2) + pow(G_x,2) + pow(B_x,2)
-        delta_y = pow(R_y, 2) + pow(G_y,2) + pow(B_y,2)
+        delta_x = pow(R_x, 2) + pow(G_x, 2) + pow(B_x, 2)
+        delta_y = pow(R_y, 2) + pow(G_y, 2) + pow(B_y, 2)
 
         energy = delta_x + delta_y
         return energy
