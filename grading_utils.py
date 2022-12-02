@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from subprocess import Popen
-from colors import color
+from colours import colour
 import unittest
 import sys
 import time
