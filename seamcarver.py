@@ -84,6 +84,7 @@ class SeamCarver(Picture):
                     least_energy[x,y] = min(least_energy[x-1,y-1], least_energy[x, y-1], least_energy[x+1, y-1]) + self.energy(x,y)
 
         print(least_energy)
+
         raise NotImplementedError
 
     def find_horizontal_seam(self) -> list[int]:
