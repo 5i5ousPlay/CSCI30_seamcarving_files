@@ -70,10 +70,11 @@ class SeamCarver(Picture):
         # print(energy_matrix)
         # print(least_energy)
 
-        # initialize least_energy matrix
+        # initialize least_energy matrix first row
         for x in range(self.width()):
             least_energy[x,0] = self.energy(x,0)
 
+        # fill in table with values of least_energy path
         for y in range(1,self.height()):
             for x in range(self.width()):
                 if x == 0:
