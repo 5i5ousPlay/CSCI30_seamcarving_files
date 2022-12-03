@@ -56,6 +56,18 @@ class SeamCarver(Picture):
         Return a sequence of indices representing the lowest-energy
         vertical seam
         '''
+        energy_matrix = dict()
+        least_energy = dict()
+        directions = dict()
+
+        # initialize energy matrix
+        for y in range(self.height()):
+            for x in range(self.width()):
+                energy_matrix[x,y] = self.energy(x,y)
+
+        # print(energy_matrix)
+
+
         raise NotImplementedError
 
     def find_horizontal_seam(self) -> list[int]:
