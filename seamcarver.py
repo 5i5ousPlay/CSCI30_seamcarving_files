@@ -56,29 +56,32 @@ class SeamCarver(Picture):
         Return a sequence of indices representing the lowest-energy
         vertical seam
         '''
-        energy_matrix = dict()
+        # energy_matrix = dict()
         least_energy = dict()
         directions = dict()
 
         # initialize energy_matrix & first row of least_energy matrix
-        for y in range(self.height()):
-            for x in range(self.width()):
-                energy_matrix[x,y] = self.energy(x,y)
-                if y == 0:
-                    least_energy[x,y] = self.energy(x,y)
+        # for y in range(self.height()):
+        #     for x in range(self.width()):
+        #         energy_matrix[x,y] = self.energy(x,y)
+        #         if y == 0:
+        #             least_energy[x,y] = self.energy(x,y)
 
         # print(energy_matrix)
         # print(least_energy)
 
         # initialize least_energy matrix
+        for x in range(self.width()):
+            least_energy[x,0] = self.energy(x,0)
+
         for y in range(1,self.height()):
             for x in range(self.width()):
                 if x == 0:
-                    least_energy[x,y] = min(energy_matrix[x,y-1], energy_matrix[x+1, y-1]) + self.energy(x,y)
+                    least_energy[x,y] = min(least_energy[x,y-1], least_energy[x+1, y-1]) + self.energy(x,y)
                 elif x == (self.width() - 1):
-                    least_energy[x,y] = min(energy_matrix[x-1, y - 1], energy_matrix[x, y - 1]) + self.energy(x, y)
+                    least_energy[x,y] = min(least_energy[x-1, y - 1], least_energy[x, y - 1]) + self.energy(x, y)
                 else:
-                    least_energy[x,y] = min(energy_matrix[x-1,y-1], energy_matrix[x, y-1], energy_matrix[x+1, y-1]) + self.energy(x,y)
+                    least_energy[x,y] = min(least_energy[x-1,y-1], least_energy[x, y-1], least_energy[x+1, y-1]) + self.energy(x,y)
 
         print(least_energy)
         raise NotImplementedError
