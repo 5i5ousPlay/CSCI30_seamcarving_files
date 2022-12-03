@@ -71,20 +71,56 @@ class SeamCarver(Picture):
         # print(least_energy)
 
         # initialize least_energy matrix first row
+        # initializes direction table first row
         for x in range(self.width()):
             least_energy[x,0] = self.energy(x,0)
+            directions[x,0] = 0
 
         # fill in table with values of least_energy path
+        # fills in direction table
+        last_row_min_index = None
         for y in range(1,self.height()):
             for x in range(self.width()):
                 if x == 0:
-                    least_energy[x,y] = min(least_energy[x,y-1], least_energy[x+1, y-1]) + self.energy(x,y)
+                    # fills out cell
+                    min_above = min(least_energy[x,y-1], least_energy[x+1, y-1])
+                    least_energy[x,y] = min_above + self.energy(x,y)
+
+                    # assigns direction
+                    if min_above == least_energy[x,y-1]:
+                        directions[x,y] = 0
+                    else:
+                        directions[x,y] = 1
+
                 elif x == (self.width() - 1):
-                    least_energy[x,y] = min(least_energy[x-1, y - 1], least_energy[x, y - 1]) + self.energy(x, y)
+                    # fills out cell
+                    min_above = min(least_energy[x-1, y - 1], least_energy[x, y - 1])
+                    least_energy[x,y] = min_above + self.energy(x, y)
+
+                    # assigns direction
+                    if min_above == least_energy[x, y - 1]:
+                        directions[x,y] = 0
+                    else:
+                        directions[x,y] = -1
                 else:
-                    least_energy[x,y] = min(least_energy[x-1,y-1], least_energy[x, y-1], least_energy[x+1, y-1]) + self.energy(x,y)
+                    # fills out cell
+                    min_above = min(least_energy[x-1,y-1], least_energy[x, y-1], least_energy[x+1, y-1])
+                    least_energy[x,y] = min_above + self.energy(x,y)
+
+                    # assigns direction
+                    if min_above == least_energy[x, y - 1]:
+                        directions[x,y] = 0
+                    elif min_above == least_energy[x+1, y-1]:
+                        directions[x,y] = 1
+                    elif min_above == least_energy[x-1,y-1]:
+                        directions[x,y] = -1
 
         print(least_energy)
+        print(directions)
+
+        # here to show algo works, just need to return indexes from direction
+        # test_answer = [3,4,3,2,2]
+        # return test_answer
 
         raise NotImplementedError
 
