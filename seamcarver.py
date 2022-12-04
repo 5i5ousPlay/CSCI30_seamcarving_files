@@ -102,8 +102,7 @@ class SeamCarver(Picture):
                         directions[x,y] = 1
                     elif min_above == least_energy[x-1,y-1]:
                         directions[x,y] = -1
-        print(least_energy)
-        # print(directions)
+
         least_energy_vseam = []
 
         # gets minimum index from least_energy last row and appends to list
@@ -148,10 +147,6 @@ class SeamCarver(Picture):
             for x in range(self.height()):
                 sideways_pic[x,y] = self[self.width()-y-1,x]
 
-        # print(self)
-        # print(sideways_pic)
-
-        # print(self)
         horizontal_seam = sideways_pic.find_vertical_seam()
         horizontal_seam.reverse()
         return horizontal_seam
