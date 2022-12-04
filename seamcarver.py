@@ -78,7 +78,6 @@ class SeamCarver(Picture):
 
         # fill in table with values of least_energy path
         # fills in direction table
-        last_row_min_index = None
         for y in range(1,self.height()):
             for x in range(self.width()):
                 if x == 0:
