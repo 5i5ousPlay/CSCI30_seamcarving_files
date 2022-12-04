@@ -56,19 +56,8 @@ class SeamCarver(Picture):
         Return a sequence of indices representing the lowest-energy
         vertical seam
         '''
-        # energy_matrix = dict()
         least_energy = dict()
         directions = dict()
-
-        # initialize energy_matrix & first row of least_energy matrix
-        # for y in range(self.height()):
-        #     for x in range(self.width()):
-        #         energy_matrix[x,y] = self.energy(x,y)
-        #         if y == 0:
-        #             least_energy[x,y] = self.energy(x,y)
-
-        # print(energy_matrix)
-        # print(least_energy)
 
         # initialize least_energy matrix first row
         # initializes direction table first row
@@ -114,12 +103,33 @@ class SeamCarver(Picture):
                     elif min_above == least_energy[x-1,y-1]:
                         directions[x,y] = -1
 
-        print(least_energy)
-        print(directions)
+        least_energy_vseam = []
 
-        # here to show algo works, just need to return indexes from direction
-        # test_answer = [3,4,3,2,2]
-        # return test_answer
+        # gets minimum index from least_energy last row and appends to list
+        # probably a more efficient way of doing this
+        # too braindead to figure it out
+        last_row = dict()
+        for x in range(self.width()):
+            last_row[x] = least_energy[x,self.height() - 1]
+        last_row_min = min(last_row, key=last_row.get)
+        least_energy_vseam.append(last_row_min)
+
+        # uses direction matrix to append index
+        n = self.height()
+        while n > 1:
+            if directions[last_row_min,n-1] == 0:
+                least_energy_vseam.insert(0, last_row_min)
+                n -= 1
+            elif directions[last_row_min, n-1] == 1:
+                last_row_min += 1
+                least_energy_vseam.insert(0, last_row_min)
+                n -= 1
+            elif directions[last_row_min, n-1] == -1:
+                last_row_min -= 1
+                least_energy_vseam.insert(0, last_row_min)
+                n -= 1
+
+        return least_energy_vseam
 
         raise NotImplementedError
 
