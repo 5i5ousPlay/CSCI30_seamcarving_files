@@ -138,8 +138,20 @@ class SeamCarver(Picture):
         Return a sequence of indices representing the lowest-energy
         horizontal seam
         '''
-        raise NotImplementedError
+        # transpose picture sideways
+        # horribly inefficient
+        sideways_pic = dict()
+        for y in range(self.width()):
+            for x in range(self.height()):
+                sideways_pic[x,y] = self[self.width()-y-1,x]
 
+        # print(sideways_pic)
+
+        # print(self)
+        # horizontal_seam = self.find_vertical_seam()
+        # return horizontal_seam
+
+        raise NotImplementedError
     def remove_vertical_seam(self, seam: list[int]):
         '''
         Remove a vertical seam from the picture
