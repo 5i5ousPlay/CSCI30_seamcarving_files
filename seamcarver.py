@@ -102,7 +102,8 @@ class SeamCarver(Picture):
                         directions[x,y] = 1
                     elif min_above == least_energy[x-1,y-1]:
                         directions[x,y] = -1
-
+        print(least_energy)
+        # print(directions)
         least_energy_vseam = []
 
         # gets minimum index from least_energy last row and appends to list
@@ -140,16 +141,20 @@ class SeamCarver(Picture):
         '''
         # transpose picture sideways
         # horribly inefficient
-        sideways_pic = dict()
+        sideways_pic = SeamCarver(self.picture())
+        sideways_pic._width = self.height()
+        sideways_pic._height = self.width()
         for y in range(self.width()):
             for x in range(self.height()):
                 sideways_pic[x,y] = self[self.width()-y-1,x]
 
+        # print(self)
         # print(sideways_pic)
 
         # print(self)
-        # horizontal_seam = self.find_vertical_seam()
-        # return horizontal_seam
+        horizontal_seam = sideways_pic.find_vertical_seam()
+        horizontal_seam.reverse()
+        return horizontal_seam
 
         raise NotImplementedError
     def remove_vertical_seam(self, seam: list[int]):
