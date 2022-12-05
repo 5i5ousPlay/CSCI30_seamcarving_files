@@ -7,7 +7,7 @@ class SeamCarver(Picture):
     ## TO-DO: fill in the methods below
     def energy(self, i: int, j: int) -> float:
         '''
-        Return the energy of pixel at column i and row j
+        Return the energy of pixel at columy i and row j
         '''
         height = self.height()
         width = self.width()
@@ -120,7 +120,16 @@ class SeamCarver(Picture):
 
     def remove_vertical_seam(self, seam: list[int]):
 
-        raise NotImplementedError
+        # overwrite the current key value pair with the next key value pair
+        for y in range(self.height()):
+            for x in range(seam[y], self.width()-1):
+                self[x,y] = self[x + 1,y]
+        
+            # delete the right most pixels
+            del self[self.width() - 1, y]
+
+        # decrement the width by 1
+        self._width -= 1
 
     def remove_horizontal_seam(self, seam: list[int]):
         '''
