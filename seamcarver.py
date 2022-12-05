@@ -139,13 +139,15 @@ class SeamCarver(Picture):
         horizontal seam
         '''
         # transpose picture sideways
+        sideways_pic = SeamCarver(self.picture().rotate(90, expand=1))
+
+        # transpose picture sideways
         # horribly inefficient
-        sideways_pic = SeamCarver(self.picture())
-        sideways_pic._width = self.height()
-        sideways_pic._height = self.width()
-        for y in range(self.width()):
-            for x in range(self.height()):
-                sideways_pic[x,y] = self[self.width()-y-1,x]
+        # sideways_pic._width = self.height()
+        # sideways_pic._height = self.width()
+        # for y in range(self.width()):
+        #     for x in range(self.height()):
+        #         sideways_pic[x,y] = self[self.width()-y-1,x]
 
         horizontal_seam = sideways_pic.find_vertical_seam()
         horizontal_seam.reverse()
