@@ -9,8 +9,13 @@ class SeamCarver(Picture):
         '''
         Return the energy of pixel at columy i and row j
         '''
+
         height = self.height()
         width = self.width()
+
+        # throw IndexError for invalid values
+        if i > width - 1 or i < 0 or j > height - 1 or j < 0:
+            raise IndexError
 
         left = i - 1 if (i >= 1) else width - 1
         right = i + 1 if (i < width - 1) else 0
@@ -111,8 +116,8 @@ class SeamCarver(Picture):
         horizontal seam
         '''
 
-        transposed_image = SeamCarver(self.picture().rotate(90, expand=1))
-        h_seam = transposed_image.find_vertical_seam()
+        rotated_image = SeamCarver(self.picture().rotate(90, expand=1))
+        h_seam = rotated_image.find_vertical_seam()
         
         return h_seam[::-1]
 
@@ -120,7 +125,11 @@ class SeamCarver(Picture):
 
     def remove_vertical_seam(self, seam: list[int]):
 
-        # overwrite the current key value pair with the next key value pair
+        # raise SeamError if the seam to be removed has a wrong length
+        if len(seam) != self.height() or self.width() == 1:
+            raise SeamError
+
+        # overwrite the current pixel with the next pixel to shift the values
         for y in range(self.height()):
             for x in range(seam[y], self.width()-1):
                 self[x,y] = self[x + 1,y]
@@ -135,7 +144,21 @@ class SeamCarver(Picture):
         '''
         Remove a horizontal seam from the picture
         '''
-        raise NotImplementedError
+
+        # rotate the image and remove a vertical seam
+        rotated_image = SeamCarver(self.picture().rotate(90, expand=1))
+        rotated_image.remove_vertical_seam(seam[::-1])
+
+        self._width = rotated_image._height
+        self._height = rotated_image._width
+
+        # reassign the pixels
+        self.clear()
+        print(self.keys())
+        for y in range(self._height):
+            for x in range(self._width):
+                print(x, y, 'and', y, rotated_image._height - 1 - x)
+                self[x,y] = rotated_image[y, (rotated_image._height - 1)-x] 
 
 class SeamError(Exception):
     pass
