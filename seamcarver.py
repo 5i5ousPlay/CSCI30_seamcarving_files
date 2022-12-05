@@ -10,6 +10,11 @@ class SeamCarver(Picture):
         '''
         height = self.height()
         width = self.width()
+
+        # throw IndexError for invalid values
+        if i > width - 1 or i < 0 or j > height - 1 or j < 0:
+            raise IndexError
+
         left = i - 1
         right = i + 1
         top = j - 1
@@ -32,8 +37,6 @@ class SeamCarver(Picture):
         y_2 = self[i, bottom]
 
         # x values
-        # could maybe be converted into a for loop
-        # feel free to try
         R_x = abs(x_1[0] - x_2[0])
         G_x = abs(x_1[1] - x_2[1])
         B_x = abs(x_1[2] - x_2[2])
@@ -48,8 +51,6 @@ class SeamCarver(Picture):
 
         energy = delta_x + delta_y
         return energy
-
-        raise NotImplementedError
 
     def find_vertical_seam(self) -> list[int]:
         '''
@@ -106,8 +107,6 @@ class SeamCarver(Picture):
         least_energy_vseam = []
 
         # gets minimum index from least_energy last row and appends to list
-        # probably a more efficient way of doing this
-        # too braindead to figure it out
         last_row = dict()
         for x in range(self.width()):
             last_row[x] = least_energy[x,self.height() - 1]
@@ -131,8 +130,6 @@ class SeamCarver(Picture):
 
         return least_energy_vseam
 
-        raise NotImplementedError
-
     def find_horizontal_seam(self) -> list[int]:
         '''
         Return a sequence of indices representing the lowest-energy
@@ -141,30 +138,55 @@ class SeamCarver(Picture):
         # transpose picture sideways
         sideways_pic = SeamCarver(self.picture().rotate(90, expand=1))
 
-        # transpose picture sideways
-        # horribly inefficient
-        # sideways_pic._width = self.height()
-        # sideways_pic._height = self.width()
-        # for y in range(self.width()):
-        #     for x in range(self.height()):
-        #         sideways_pic[x,y] = self[self.width()-y-1,x]
-
         horizontal_seam = sideways_pic.find_vertical_seam()
         horizontal_seam.reverse()
         return horizontal_seam
 
-        raise NotImplementedError
     def remove_vertical_seam(self, seam: list[int]):
         '''
         Remove a vertical seam from the picture
         '''
-        raise NotImplementedError
+        # raise SeamError if the seam to be removed has a wrong length
+        if len(seam) != self.height() or self.width() == 1:
+            raise SeamError
+
+        for i in range(1,len(seam)):
+            if abs(seam[i]-seam[i-1]) > 1:
+                raise SeamError
+
+        for y in range(self.height()):
+            for x in range(seam[y], self.width() - 1):
+                self[x, y] = self[x + 1, y]
+
+            del self[self.width() - 1, y]
+
+        # decrement the width by 1
+        self._width -= 1
 
     def remove_horizontal_seam(self, seam: list[int]):
         '''
         Remove a horizontal seam from the picture
         '''
-        raise NotImplementedError
+        # throw SeamErrors
+        if len(seam) != self.width() or self.height() == 1:
+            raise SeamError
+
+        for i in range(1,len(seam)):
+            if abs(seam[i]-seam[i-1]) > 1:
+                raise SeamError
+
+        # rotate the image and remove a vertical seam
+        rotated_image = SeamCarver(self.picture().rotate(90, expand=1))
+        rotated_image.remove_vertical_seam(seam[::-1])
+
+        self._width = rotated_image._height
+        self._height = rotated_image._width
+
+        # reassign the pixels
+        self.clear()
+        for y in range(self._height):
+            for x in range(self._width):
+                self[x, y] = rotated_image[y, (rotated_image._height - 1) - x]
 
 class SeamError(Exception):
     pass
