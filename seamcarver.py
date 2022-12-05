@@ -23,9 +23,9 @@ class SeamCarver(Picture):
         bottom = j + 1 if (j < height - 1) else 0
 
         # get RBG value of pixel
-        x_1 = self[right, j]   # right pixel
-        x_2 = self[left, j]   # left pixel
-        y_1 = self[i, top]   # top pixel
+        x_1 = self[right, j]    # right pixel
+        x_2 = self[left, j]     # left pixel
+        y_1 = self[i, top]      # top pixel
         y_2 = self[i, bottom]   # bottom pixel
         
         # x values
@@ -125,8 +125,10 @@ class SeamCarver(Picture):
 
     def remove_vertical_seam(self, seam: list[int]):
 
-        # raise SeamError if the seam to be removed has a wrong length
-        if len(seam) != self.height() or self.width() == 1:
+        print(self.width(), self.height())
+
+        # throw SeamErrors
+        if len(seam) != self.height() or self.width() == 1 or seam != self.find_vertical_seam():
             raise SeamError
 
         # overwrite the current pixel with the next pixel to shift the values
@@ -145,19 +147,22 @@ class SeamCarver(Picture):
         Remove a horizontal seam from the picture
         '''
 
+        # throw SeamErrors
+        if len(seam) != self.width() or self.height() == 1 or seam != self.find_horizontal_seam():
+            raise SeamError
+
         # rotate the image and remove a vertical seam
         rotated_image = SeamCarver(self.picture().rotate(90, expand=1))
         rotated_image.remove_vertical_seam(seam[::-1])
 
+        # assign the proper width and height
         self._width = rotated_image._height
         self._height = rotated_image._width
 
-        # reassign the pixels
+        # reset the dictionary and reassign the pixels
         self.clear()
-        print(self.keys())
         for y in range(self._height):
             for x in range(self._width):
-                print(x, y, 'and', y, rotated_image._height - 1 - x)
                 self[x,y] = rotated_image[y, (rotated_image._height - 1)-x] 
 
 class SeamError(Exception):
